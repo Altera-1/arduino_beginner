@@ -1,1 +1,1 @@
-the first little item on arduino
+some little projects
