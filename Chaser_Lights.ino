@@ -26,26 +26,33 @@ void loop()
         { 
           int b = a - 1;
           int c = b - 1;
+          int d = c - 1;
 
           digitalWrite(a, LOW);
-          delay(40);  // 快速点亮
+          delay(40);  // 点亮第一个
           digitalWrite(b, LOW);
-          delay(40);  // 快速点亮第二个
-          digitalWrite(c, HIGH);
-          delay(20);  // 快速熄灭第三个
+          delay(40);  // 点亮第二个
+          digitalWrite(c, LOW);
+          delay(40);  // 点亮第三个
+          digitalWrite(d,HIGH);
+          delay(20);  // 熄灭第四个
           
-          // 循环结束重置（你的原始逻辑）
+          
           if (a == 9) 
           {
             digitalWrite(a, HIGH);
             digitalWrite(b, HIGH);
+            digitalWrite(c, HIGH);
             delay(100);  // 循环结束稍作停顿
           }
           
-          // 检查新命令
-          if (Serial.available() > 0) break;
+          if (Serial.available() > 0) break;//有新输入退出循环
         }
       }
+      for(int a=2;a<10;a++)//退出循环熄灭所有led
+      {
+       digitalWrite(a,HIGH);
+      }  
     }  
   }
 }
