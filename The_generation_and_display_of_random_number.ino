@@ -1,3 +1,15 @@
+/*这是一个arduino随机数字生成的代码，使用的是共阳极数码管，对应连接方式如下
+  2    →     a     
+  3    →     b      
+  4    →     c     
+  5    →     d     
+  6    →     e     
+  7    →     f     
+  8    →     g
+  11 → 按钮一脚
+按钮另一脚   → GND
+Arduino 5V  → 数码管共阳极(COM)
+Arduino GND → 面包板GND*/
 void setup() 
 {
   Serial.begin(9600);
@@ -15,7 +27,7 @@ void loop()
 {
   int button=digitalRead(11);
   randomSeed(analogRead(A0));
-  int number=random(0,9);
+  int number=random(0,9);//读取11口，按下，数字快速跳动。松手停止跳动显示数字
   if(button==0)
   {
    display(number);
@@ -26,7 +38,7 @@ void display(int a)
 { 
   delay(50);
   clear();
-  switch(a)
+  switch(a)//数字显示
     {
       case 0:
         digitalWrite(2, LOW); // a
@@ -103,9 +115,8 @@ void display(int a)
     }
 }
 
-void clear()
+void clear()//清除显示函数
 {
-  // 清除所有使用的引脚 (2-8)
   for(int a = 2; a <= 8; a++)
   {
     digitalWrite(a, HIGH);
