@@ -17,28 +17,58 @@ void setup()
   for(int a = 2; a <= 8; a++)
   {
     pinMode(a, OUTPUT);
-    pinMode(11,INPUT_PULLUP);
+    pinMode(11, INPUT_PULLUP);
     digitalWrite(a, HIGH); // 初始化为HIGH（熄灭）
   }
-  
-
 }
+
 void loop() 
 {
-  int button=digitalRead(11);
-  randomSeed(analogRead(A0));
-  int number=random(0,9);//读取11口，按下，数字快速跳动。松手停止跳动显示数字
-  if(button==0)
+  int button = digitalRead(11);
+  
+  if(button == 0)
   {
-   display(number);
+    // 按钮防抖
+    delay(50);
+    if(digitalRead(11) == 0) {
+      // 显示5个随机数字，最后一个停留
+      displayRandomSequence();
+    }
+    
+    // 等待按钮释放
+    while(digitalRead(11) == 0) {
+      delay(10);
+    }
   }
+}
+
+void displayRandomSequence()
+{
+  int lastNumber = 0;
+  
+  for(int i = 0; i < 5; i++)
+  {
+    // 每次生成随机数种子
+    randomSeed(analogRead(A0) + millis());
+    lastNumber = random(0, 10);
+    
+    // 显示当前数字
+    display(lastNumber);
+    
+    // 如果不是最后一个数字，短暂显示后清除
+    if(i < 4) {
+      delay(100); // 每个数字显示300ms
+      clear();
+      delay(50); // 数字间的间隔100ms
+    }
+  }
+  // 最后一个数字将保持显示
 }
 
 void display(int a)
 { 
-  delay(50);
   clear();
-  switch(a)//数字显示
+  switch(a)
     {
       case 0:
         digitalWrite(2, LOW); // a
@@ -110,13 +140,13 @@ void display(int a)
         digitalWrite(8, LOW); // g
         break;
       default:
-      
         break;
     }
 }
 
-void clear()//清除显示函数
+void clear()
 {
+  // 清除所有使用的引脚 (2-8)
   for(int a = 2; a <= 8; a++)
   {
     digitalWrite(a, HIGH);
